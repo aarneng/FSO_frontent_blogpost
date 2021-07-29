@@ -9,8 +9,6 @@ import "./styles.css"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
   const [blogSubmitVisible, setBlogSubmitVisible] = useState(false)
 
@@ -30,18 +28,19 @@ const App = () => {
     })
   }, [])
 
-  async function handleLogin(e) {
-    e.preventDefault()
+  async function handleLogin(userObj) {
+
+    const username = userObj.username
+    const password = userObj.password
+
     console.log("logging in with", username, password)
 
     try {
       const response = await loginService.login({ username, password })
       setUser(response)
       blogService.setToken(response.token)
-      setUsername("")
-      setPassword("")
       autoSetNotification("login successful")
-      console.log("login was suuuuc", response)
+      console.log("login was suuuuc", response.token)
       window.localStorage.setItem("user", JSON.stringify(response))
     }
     catch (exception) {
@@ -56,7 +55,7 @@ const App = () => {
     return (
       <div>
         <div style={{ display: vals[blogSubmitVisible + 0] }}>
-          <button onClick={() => setBlogSubmitVisible(true)}>create new blog</button>
+          <button id="blog-create-button" onClick={() => setBlogSubmitVisible(true)}>create new blog</button>
         </div>
         <div style={{ display: vals[1 - blogSubmitVisible] }}>
           <BlogForm
@@ -73,10 +72,6 @@ const App = () => {
       <div>
         {notifications()}
         <LoginForm
-          username={username}
-          password={password}
-          handleUsernameChange={({ target }) => setUsername(target.value)}
-          handlePasswordChange={({ target }) => setPassword(target.value)}
           handleSubmit={handleLogin}
         />
       </div>
@@ -107,13 +102,14 @@ const App = () => {
     )
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault()
+  async function handleSubmit(blogObj) {
 
     try {
-      const title  = e.target[0].value
-      const author = e.target[1].value
-      const url    = e.target[2].value
+      const title  = blogObj.title
+      const author = blogObj.author
+      const url    = blogObj.url
+
+      // console.log({ author: author, title: title, url: url })
 
       const res = await blogService.post({ author: author, title: title, url: url })
       setBlogs(blogs.concat(res))
@@ -122,7 +118,7 @@ const App = () => {
       autoSetNotification(`new blog "${title}" by ${author} added`)
     }
     catch (error) {
-      // console.log(error)
+      console.log(error)
       autoSetNotification(error.message, true)
     }
   }

@@ -15,6 +15,7 @@ function Blog({ blog, handleLike, handleDelete, user }) {
     marginBottom: 5,
     backgroundColor: sameUser ? "#dbffc9" : ""
   }
+
   if (!seeAll) {
     return (
       <div style={blogStyle}>

@@ -2,13 +2,31 @@ import React, { useState } from "react"
 
 
 const BlogForm = ({ handleSubmit }) => {
-  const [title, setTitle]   = useState("")
+  const [title,  setTitle]  = useState("")
   const [author, setAuthor] = useState("")
-  const [url, setURL]       = useState("")
+  const [url,    setURL]    = useState("")
+
+  function submitBlog(e) {
+    e.preventDefault()
+    console.log("called me?")
+    if (title  === "" || author === "" || url === "") {
+      console.log("fail")
+      return null
+    }
+    handleSubmit({
+      title: title,
+      author: author,
+      url: url
+    })
+    setTitle("")
+    setAuthor("")
+    setURL("")
+  }
+
   return (
     <div>
       <h2>submit a new blog :)</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={submitBlog}>
         <div>
         title
           <input
@@ -40,8 +58,9 @@ const BlogForm = ({ handleSubmit }) => {
           />
         </div>
         <button
+          id="blog-submit-button"
           type="submit">
-        submit
+            submit
         </button>
       </form>
     </div>

@@ -25,10 +25,6 @@ module.exports = {
           "error",
           2  
       ],
-      "linebreak-style": [
-          "error",
-          "unix"
-      ],
       "quotes": [
           "warn",
           "double"
@@ -38,7 +34,6 @@ module.exports = {
           "never"
       ],
       "eqeqeq": "error",
-      "no-trailing-spaces": "error",
       "react/no-unescaped-entities": 0,
       "object-curly-spacing": [
           "error", "always"

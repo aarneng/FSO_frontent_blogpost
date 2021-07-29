@@ -1,5 +1,5 @@
 import axios from "axios"
-const baseUrl = "/api/blogs"
+const baseUrl = "http://localhost:3003/api/blogs"
 
 let token = null
 
@@ -14,8 +14,10 @@ const getAll = () => {
 
 const post = async blog => {
   axios.defaults.headers.common["Authorization"] = token
+  console.log( { blog, token } )
   const response = await axios
     .post(baseUrl, blog)
+  console.log("THE SERVERERESPONDE DWITH", response)
   return response.data
 }
 
