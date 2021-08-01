@@ -24,7 +24,8 @@ const App = () => {
     blogService.getAll().then(blogs => {
       const sortedBlogs = blogs.sort((a, b) => a.likes < b.likes)
       setBlogs(sortedBlogs)
-      console.log(sortedBlogs)
+      console.log("the sorted blogs are", sortedBlogs)
+      console.log(sortedBlogs.sort((a, b) => a.likes < b.likes))
     })
   }, [])
 
@@ -115,7 +116,7 @@ const App = () => {
       setBlogs(blogs.concat(res))
       console.log(blogs)
       setBlogSubmitVisible(false)
-      autoSetNotification(`new blog "${title}" by ${author} added`)
+      autoSetNotification(`new blog "${title}" by author ${author} added`)
     }
     catch (error) {
       console.log(error)
@@ -132,17 +133,19 @@ const App = () => {
       {notifications()}
       <br></br>
       {blogForm()} <br></br><br></br>
-      {
-        blogs.map(blog =>
-          <Blog
-            key={blog.id}
-            blog={blog}
-            handleLike={handleLike}
-            handleDelete={handleDelete}
-            user={user}
-          />
-        )
-      }
+      <div>
+        {
+          blogs.map(blog =>
+            <Blog
+              key={blog.id}
+              blog={blog}
+              handleLike={handleLike}
+              handleDelete={handleDelete}
+              user={user}
+            />
+          )
+        }
+      </div>
     </>
   )
 
@@ -152,8 +155,8 @@ const App = () => {
   }
 
   async function handleDelete(blog) {
-    const res = await blogService.deleteBlog(blog)
-    console.log(res)
+    await blogService.deleteBlog(blog)
+    setBlogs(blogs.filter(i => i.id !== blog.id))
   }
 
 

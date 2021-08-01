@@ -57,10 +57,6 @@ const LoginForm = ({ handleSubmit }) => {
 
 
 LoginForm.propTypes = {
-  username: PropTypes.string.isRequired,
-  password: PropTypes.string.isRequired,
-  setUsername: PropTypes.func.isRequired,
-  setPassword: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired
 }
 

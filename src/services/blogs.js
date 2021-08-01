@@ -31,7 +31,6 @@ const like = async blog => {
 
 const deleteBlog = async blog => {
   axios.defaults.headers.common["Authorization"] = token
-  console.log("THE BLOG IS:", blog)
   const response = await axios
     .delete(baseUrl + "/" + blog.id, { title: blog.title, url: blog.url, likes: blog.likes, author: blog.author })
   return response.data
