@@ -22,10 +22,8 @@ const App = () => {
     }
 
     blogService.getAll().then(blogs => {
-      const sortedBlogs = blogs.sort((a, b) => a.likes < b.likes)
+      const sortedBlogs = blogs.sort(function(a, b){return b.likes - a.likes})
       setBlogs(sortedBlogs)
-      console.log("the sorted blogs are", sortedBlogs)
-      console.log(sortedBlogs.sort((a, b) => a.likes < b.likes))
     })
   }, [])
 

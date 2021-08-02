@@ -180,7 +180,7 @@ describe("Blog app", function() {
           return ret
         }
 
-        let blogtitles = []
+        let blogs = [ blog ]
 
         let token = JSON.parse(window.localStorage.getItem("user")).token
 
@@ -188,16 +188,14 @@ describe("Blog app", function() {
 
         const newBlogsAmt = 5
 
-        // cy.wait(5000)
-
         for (let i = 0; i < newBlogsAmt; i++) {
           const randomBlog = {
             title: randomWords(),
             author: randomWords(),
             url: randomWords(),
-            likes: Math.floor(10 * Math.random())
+            likes: Math.floor(10000 * Math.random())
           }
-          blogtitles.push(randomBlog.title)
+          blogs.push(randomBlog)
           cy.request({
             method: "POST", 
             url: "http://localhost:3003/api/blogs/",
@@ -207,40 +205,31 @@ describe("Blog app", function() {
             body: randomBlog
           })
         }
-        cy.wait(1000)
-        cy.wait(1000)
-        cy.wait(1000)
-        cy.wait(1000)
-
         cy.reload() // reload the page to see the added blogs
 
         cy.wait(1000)
         
-        // cy.visit("http://localhost:3000") // reload the page to see the added blogs
-
-        // cy.wait(3000)
-        
         cy.contains(`"${blog.title}" by ${blog.author}`).parent().parent().within(() => {
+          // click each view button
           cy.get("button").each(($btn) => {
             cy.wrap($btn).click()
           })
         })
 
-        cy.contains(blogtitles[0]).parent().parent().children().should("have.length", newBlogsAmt + 1)
+        blogs = blogs.sort(function(a, b){return b.likes - a.likes})
+        let index = 0
+
+        cy.contains(blogs[0].title).parent().parent().children().should("have.length", newBlogsAmt + 1)
+          // go through each element and check if they all contain the expected amounts of likes
+          // (the expected amount of likes are sorted in descending order)
+          // we should also expect that the element doesn't contain other element's likes
           .each( ($el) => {
             const text = $el.text()
-            console.log(text)
+            cy.expect(text).to.contain(blogs[index].url + " " + blogs[index].likes + " like")
+            if (index + 1 < blogs.length) cy.expect(text).to.not.contain(blogs[index + 1].url + " " + blogs[index + 1].likes + " like")
+            if (index >= 1) cy.expect(text).to.not.contain(blogs[index - 1].url + " " + blogs[index - 1].likes + " like")
+            index++
           })
-
-
-        // cy.wait(3000)
-        
-        // cy.visit("http://localhost:3000") // reload the page to see the added blogs
-
-
-        // cy.wait(3000)
-        
-        // cy.visit("http://localhost:3000") // reload the page to see the added blogs
       })
     })
   })
