@@ -21,17 +21,16 @@ module.exports = {
       "react", "jest"
   ],
   "rules": {
-      "indent": [
-          "error",
-          2  
-      ],
       "quotes": [
           "warn",
           "double"
       ],
       "semi": [
-          "error",
+          "warn",
           "never"
+      ],
+      "no-unused-vars": [
+          "warn"
       ],
       "eqeqeq": "error",
       "react/no-unescaped-entities": 0,

@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 
 
-const BlogForm = ({ handleSubmit }) => {
+const SubmitBlogForm = ({ handleSubmit }) => {
   const [title,  setTitle]  = useState("")
   const [author, setAuthor] = useState("")
   const [url,    setURL]    = useState("")
@@ -64,6 +64,27 @@ const BlogForm = ({ handleSubmit }) => {
         </button>
       </form>
     </div>
-  )}
+  )
+}
+
+
+const BlogForm = ({ handleSubmit, blogSubmitVisible, setBlogSubmitVisible }) =>  {
+  const vals = ["", "none"]
+  // console.log(vals, blogSubmitVisible)
+  return (
+    <div>
+      <div style={{ display: vals[blogSubmitVisible + 0] }}>
+        <button id="blog-create-button" onClick={() => setBlogSubmitVisible(true)}>create new blog</button>
+      </div>
+      <div style={{ display: vals[1 - blogSubmitVisible] }}>
+        <SubmitBlogForm
+          handleSubmit={handleSubmit}
+        />
+        <button onClick={() => setBlogSubmitVisible(false)}>cancel</button>
+      </div>
+    </div>
+  )
+}
+
 
 export default BlogForm

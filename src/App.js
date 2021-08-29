@@ -1,18 +1,27 @@
 import React, { useState, useEffect } from "react"
-import Blog from "./components/Blog"
+import { useSelector, useDispatch } from 'react-redux'
+
+import Blogs from "./components/blogs"
 import blogService from "./services/blogs"
 import loginService from "./services/login"
 
 import BlogForm from "./forms/blogform"
 import LoginForm from "./forms/loginform"
+
+import Notification from "./notification/notifications"
+
+// import { setNotification } from "./reducer/notificationReducer"
+import { initBlogs } from "./reducers/blogReducer"
+
 import "./styles.css"
 
+
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  const dispatch = useDispatch()
+
   const [user, setUser] = useState(null)
-  const [blogSubmitVisible, setBlogSubmitVisible] = useState(false)
-
-
+  const [blogSubmitVisible, setBlogSubmitVisible] = useState(false)  
+  
   useEffect(() => {
     const myUser = JSON.parse(window.localStorage.getItem("user"))
     setUser(myUser)
@@ -20,14 +29,26 @@ const App = () => {
     if (myUser !== null) {
       blogService.setToken(myUser.token)
     }
+    
+    dispatch(initBlogs())
 
-    blogService.getAll().then(blogs => {
-      const sortedBlogs = blogs.sort((a, b) => a.likes < b.likes)
-      setBlogs(sortedBlogs)
-      console.log("the sorted blogs are", sortedBlogs)
-      console.log(sortedBlogs.sort((a, b) => a.likes < b.likes))
-    })
-  }, [])
+  }, [dispatch])
+
+  // const blogs = useSelector(state => {
+  //   return state.blogs
+  // })
+
+
+  // const vote = (id) => {
+  //   const toVote = blogs.find(a => a.id === id)
+  //   dispatch(setNotification(`you voted '${toVote.content}'`, 5000))
+  // }
+
+  function autoSetNotification(notif, isError = false, timeout = 5000) {
+    setNotification({ notification: notif, errorStatus: isError })
+    setTimeout(() => setNotification(null), timeout)
+  }
+
 
   async function handleLogin(userObj) {
 
@@ -50,71 +71,24 @@ const App = () => {
     }
   }
 
-  function blogForm() {
-    const vals = ["", "none"]
-    // console.log(vals, blogSubmitVisible)
-    return (
-      <div>
-        <div style={{ display: vals[blogSubmitVisible + 0] }}>
-          <button id="blog-create-button" onClick={() => setBlogSubmitVisible(true)}>create new blog</button>
-        </div>
-        <div style={{ display: vals[1 - blogSubmitVisible] }}>
-          <BlogForm
-            handleSubmit={handleSubmit}
-          />
-          <button onClick={() => setBlogSubmitVisible(false)}>cancel</button>
-        </div>
-      </div>
-    )
-  }
-
-  function loginForm() {
-    return (
-      <div>
-        {notifications()}
-        <LoginForm
-          handleSubmit={handleLogin}
-        />
-      </div>
-    )
-  }
-
+  
   function handleLogout(e) {
     e.preventDefault()
     setUser(null)
     window.localStorage.removeItem("user")
   }
   const [notification, setNotification] = useState(null)
-
-  function autoSetNotification(notif, isError = false, timeout = 5000) {
-    setNotification({ notification: notif, errorStatus: isError })
-    setTimeout(() => setNotification(null), timeout)
-  }
-
-  function notifications() {
-    // console.log("NOTIFS:", notification)
-    if (!notification) return null
-    const name = "notification" + (notification.errorStatus ? "-error" : "")
-    // console.log(name);
-    return (
-      <div className={name}>
-        {notification.notification}
-      </div>
-    )
-  }
-
+  
   async function handleSubmit(blogObj) {
-
     try {
       const title  = blogObj.title
       const author = blogObj.author
-      const url    = blogObj.url
-
+      // const url    = blogObj.url
+      
       // console.log({ author: author, title: title, url: url })
-
-      const res = await blogService.post({ author: author, title: title, url: url })
-      setBlogs(blogs.concat(res))
-      console.log(blogs)
+      
+      // const res = await blogService.post({ author: author, title: title, url: url })
+      // setBlogs(blogs.concat(res))
       setBlogSubmitVisible(false)
       autoSetNotification(`new blog "${title}" by author ${author} added`)
     }
@@ -124,29 +98,46 @@ const App = () => {
     }
   }
 
-  const blogsList = () => (
-    <>
+  const LoginScreen = () => {
+    return (
+      <div>
+        <Notification notification={notification} />
+        <LoginForm
+          handleSubmit={handleLogin}
+        />
+      </div>
+    )
+  }
+  
+  const BlogScreen = () => (
+    <div>
       <h2>blogs</h2>
       {user.name} is logged in
       <button onClick={handleLogout}> log out</button>
       <br></br>
-      {notifications()}
+      <Notification 
+        notification={notification} 
+      />
+
       <br></br>
-      {blogForm()} <br></br><br></br>
+
+      <BlogForm 
+        handleSubmit={handleSubmit} 
+        blogSubmitVisible={blogSubmitVisible} 
+        setBlogSubmitVisible={setBlogSubmitVisible} 
+      />
+
+      <br></br>
+      <br></br>
+
       <div>
-        {
-          blogs.map(blog =>
-            <Blog
-              key={blog.id}
-              blog={blog}
-              handleLike={handleLike}
-              handleDelete={handleDelete}
-              user={user}
-            />
-          )
-        }
+        <Blogs 
+          user={user} 
+          handleLike={handleLike} 
+          handleDelete={handleDelete} 
+        />
       </div>
-    </>
+    </div>
   )
 
   async function handleLike(blog) {
@@ -156,19 +147,17 @@ const App = () => {
 
   async function handleDelete(blog) {
     await blogService.deleteBlog(blog)
-    setBlogs(blogs.filter(i => i.id !== blog.id))
+    // setBlogs(blogs.filter(i => i.id !== blog.id))
   }
 
-
-  function render() {
+  const Render = () => {
     return (user === null)
-      ? loginForm()
-      : blogsList()
+      ? <LoginScreen />
+      : <BlogScreen />
   }
+
   return (
-    <div>
-      {render()}
-    </div>
+    <Render />
   )
 }
 

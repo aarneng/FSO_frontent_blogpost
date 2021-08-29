@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 
-function Blog({ blog, handleLike, handleDelete, user }) {
+function Blog({ blog, user, handleLike, handleDelete }) {
   const [seeAll, setSeeAll] = useState(false)
   const [likes, setLikes] = useState(blog.likes)
   const vals = ["", "none"]
