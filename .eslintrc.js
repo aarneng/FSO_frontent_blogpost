@@ -35,7 +35,7 @@ module.exports = {
       "eqeqeq": "error",
       "react/no-unescaped-entities": 0,
       "object-curly-spacing": [
-          "error", "always"
+          "warn", "always"
       ],
       "arrow-spacing": [
           "error", { "before": true, "after": true }

@@ -1,28 +1,31 @@
 import React, { useState } from "react"
-import PropTypes from "prop-types"
+import { connect } from "react-redux"
+import { login } from "../reducers/userReducer"
 
 
-const LoginForm = ({ handleSubmit }) => {
-
+const LoginForm = (props) => {
+  console.log("you are loking at the login screen :)")
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
 
   function submitLogin(e) {
     e.preventDefault()
+    console.log("so far", username, password)
 
     if (!username || !password) return null
 
-    handleSubmit({
+    props.login({
       username: username,
       password: password
     })
 
     setUsername("")
     setPassword("")
+    props.afterLogin()
   }
 
   return (
-    <>
+    <div>
       <h2>Login to blogs app</h2>
       <form onSubmit={submitLogin}>
         <div>
@@ -32,7 +35,7 @@ const LoginForm = ({ handleSubmit }) => {
             value={username}
             name="Username"
             id="username"
-            onChange={ ({ target }) => setUsername(target.value) }
+            onChange={ ({ target }) => {console.log(target); setUsername(target.value) }}
           />
         </div>
         <div>
@@ -52,12 +55,12 @@ const LoginForm = ({ handleSubmit }) => {
         login
         </button>
       </form>
-    </>
-  )}
-
-
-LoginForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired
+    </div>
+  )
 }
 
-export default LoginForm
+const mapDispatchToProps = {
+  login
+}
+
+export default connect(null, mapDispatchToProps)(LoginForm)

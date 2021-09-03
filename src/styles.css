@@ -1,0 +1,7 @@
+body {
+  margin: 0
+}
+
+.margin-under-navbar {
+  margin-top: var(--navbar-height);
+}

@@ -1,4 +1,7 @@
 import React, { useState } from "react"
+import { connect } from "react-redux"
+import { addBlog } from "../reducers/blogReducer"
+import { setNotification } from "../reducers/notificationReducer"
 
 
 const SubmitBlogForm = ({ handleSubmit }) => {
@@ -68,9 +71,26 @@ const SubmitBlogForm = ({ handleSubmit }) => {
 }
 
 
-const BlogForm = ({ handleSubmit, blogSubmitVisible, setBlogSubmitVisible }) =>  {
+const BlogForm = (props) =>  {
+  const user = props.user
+
+  const [blogSubmitVisible, setBlogSubmitVisible] = useState(false)
+
+  async function handleSubmit(blogObj) {
+    try {
+      blogObj.user = user
+      props.addBlog(blogObj)
+      setBlogSubmitVisible(false)
+     props.setNotification(`new blog "${blogObj.title}" by author ${blogObj.author} added`)
+    }
+    catch (error) {
+      console.log(error)
+      props.setNotification(error.message, true)
+    }
+  }
+
   const vals = ["", "none"]
-  // console.log(vals, blogSubmitVisible)
+
   return (
     <div>
       <div style={{ display: vals[blogSubmitVisible + 0] }}>
@@ -86,5 +106,16 @@ const BlogForm = ({ handleSubmit, blogSubmitVisible, setBlogSubmitVisible }) => 
   )
 }
 
+function mapStateToProps(state) {
+  return {
+    user: state.user
+  }
+}
 
-export default BlogForm
+const mapDispatchToProps = {
+  addBlog,
+  setNotification
+} 
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(BlogForm)

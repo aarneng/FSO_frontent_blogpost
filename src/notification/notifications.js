@@ -1,6 +1,6 @@
 import React from "react"
 import "./notification_styles.css"
-import { connect } from 'react-redux'
+import { connect } from "react-redux"
 
 const Notification = ({ notification }) => {
   if (!notification) return null
@@ -8,7 +8,7 @@ const Notification = ({ notification }) => {
 
   return (
     <div className={name}>
-      { notification.notification }
+      { notification.content }
     </div>
   )
 }

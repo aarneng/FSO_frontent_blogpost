@@ -1,9 +1,20 @@
 import React, { useState } from "react"
+import { connect } from "react-redux"
+import { likeBlog, deleteBlog } from "../reducers/blogReducer"
 
-function Blog({ blog, user, handleLike, handleDelete }) {
-  const [seeAll, setSeeAll] = useState(false)
-  const [likes, setLikes] = useState(blog.likes)
-  const vals = ["", "none"]
+function Blog({ blog, ...props }) {
+
+  const user = props.user
+
+  async function handleLike(blog) {
+    props.likeBlog(blog)
+  }
+
+  async function handleDelete(blog) {
+    props.deleteBlog(blog)
+  }
+  
+  const [seeMoreInfo, setSeeMoreInfo] = useState(false)
 
   const sameUser = user.id === blog.user.id
 
@@ -16,32 +27,46 @@ function Blog({ blog, user, handleLike, handleDelete }) {
     backgroundColor: sameUser ? "#dbffc9" : ""
   }
 
-  if (!seeAll) {
+  if (!seeMoreInfo) {
     return (
       <div style={blogStyle}>
-        <div style={{ display: vals[seeAll + 0] }}>
-          "{blog.title}" by {blog.author}
-          <button onClick={() => setSeeAll(true)}>view</button>
-        </div>
+        "{blog.title}" by {blog.author}
+        <button onClick={() => setSeeMoreInfo(true)}>view</button>
       </div>
     )
   }
   return (
     <div style={blogStyle}>
-      <div style={{ display: vals[1 - seeAll] }}>
-        "{blog.title}" by {blog.author} <br></br>
-        {blog.url} <br></br>
-        {likes} <button onClick={() => {
-          handleLike(blog)
-          setLikes(likes + 1)
-        }}>like</button>
-        <br></br>
-        {blog.user.name} <br></br>
-        <button onClick={() => setSeeAll(false)}>view less</button>
-      </div>
-      <button style={{ display: vals[1 - sameUser] }} onClick={() => handleDelete(blog)}>delete blog</button>
+      "{blog.title}" by {blog.author} <br></br>
+      {blog.url}
+      <br></br>
+      {blog.likes} 
+      <button onClick={() => {handleLike(blog)}}>
+        like
+      </button>
+      <br></br>
+      {blog.user.name}
+      <br></br>
+      <button onClick={() => setSeeMoreInfo(false)}>view less</button>
+      {
+        sameUser
+          ? <button onClick={() => handleDelete(blog)}>
+              delete blog
+            </button> 
+          : ""
+      }
     </div>
   )
 }
 
-export default Blog
+const mapStateToProps = (state) => {
+  return {
+    user: state.user
+  }
+}
+
+const mapDispatchToProps = {
+  likeBlog, deleteBlog
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Blog)

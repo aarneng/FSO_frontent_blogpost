@@ -1,0 +1,90 @@
+:root {
+  --navbar-height: 7vh;
+  --navbar-color: hsl(0, 32%, 23%);
+  --navbar-font-color: hsl(0, 0%, 100%);
+  --hover-font-color: hsl(0, 0%, 0%);
+  --hover-background-color: hsl(60, 56%, 91%);
+}
+/*
+color testing
+------------
+complementary: 284d4d
+analgous: 4d283a
+split comp: 284d3a
+*/
+.navbar {
+  height: var(--navbar-height);
+  width: 100vw;
+  position: fixed;
+  background-color: var(--navbar-color);
+  top: 0;
+}
+
+.navbar-nav {
+  padding-left: 5vw;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: space-evenly;
+  height: 100%;
+}
+
+.navbar-element {
+  color: var(--navbar-font-color);
+  font-weight: 650;
+  font-size: 120%;
+  font-family: IBM Plex Mono, monospace;
+  padding: calc(var(--navbar-height) / 4);
+  margin-right: 100px;
+  border-radius: 4px;
+}
+
+.navbar-element-animation:hover {
+  color: var(--hover-font-color);
+  background-color: var(--hover-background-color);
+}
+
+.svg-icon {
+  position: absolute; 
+  top: 40%;
+  left: 4%;
+  transform: translate(-50%, -50%) scale(1.47561);
+  z-index: 0;
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 1800px) {
+  :root {
+    --navbar-height: 15vh
+  }
+
+  .navbar-element {
+    padding: calc(var(--navbar-height) / 10);
+  }
+
+  .everything {
+    padding-left: 3vw;
+  }
+
+}
+
+@media only screen and (max-width: 800px) {
+  :root {
+    --navbar-height: 30vh
+  }
+
+  .navbar-element {
+    padding: calc(var(--navbar-height) / 20);
+  }
+
+  .rules {
+    margin-left: 8vw;
+  }
+
+  .everything {
+    padding-left: 0vw;
+  }
+
+
+}

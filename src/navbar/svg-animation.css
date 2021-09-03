@@ -1,0 +1,58 @@
+root {
+  --color-pink: hsl(330, 32%, 60%);
+  --color-beige: hsl(60, 56%, 91%);
+  --color-orange: hsl(31, 68%, 48%);
+  --test: hsl(59, 68%, 56%);
+  
+}
+
+/* 
+.logo {
+  animation: logo-color-switch 5s linear infinite alternate;
+} */
+/* 
+#SvgjsStop1012 {
+  stop-color: hsl(330, 32%, 60%);
+  animation: logo-color-switch 1s linear infinite alternate;
+} */
+
+/* stop {
+  stop-color: hsl(330, 32%, 60%);
+  animation: logo-color-switch 1s linear infinite alternate;
+} */
+/* 
+@keyframes logo-color-switcher {
+  0% {
+    stop-color: hsl(330, 32%, 50%);
+  }
+
+  100% {
+    stop-color: hsl(330, 32%, 75%);
+  }
+} */
+
+/* 
+.color {
+  animation: col 3s linear infinite;
+}
+
+@keyframes col {
+
+  0%,
+  71% {
+    fill: hsl(330, 32%, 60%);
+  }
+
+  72% {
+    fill: black
+  }
+
+  75%,
+  100% {
+    fill: #cf7e27
+  }
+} */
+
+.test {
+  fill: url(#SvgjsLinearGradient1011);
+}

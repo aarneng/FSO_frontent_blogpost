@@ -13,7 +13,8 @@ const notificationReducer = (state=null, action) => {
 
 let timeoutId
 
-export function setNotification(content, isError=false, timeout=10_000) {
+export function setNotification(content, isError=false, timeout=10000) {
+  console.log("setting notification", content, "for", timeout)
   return async dispatch => {
     dispatch({
       type: "SET_NOTIFICATION",
