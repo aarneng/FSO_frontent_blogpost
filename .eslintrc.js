@@ -25,10 +25,6 @@ module.exports = {
           "warn",
           "double"
       ],
-      "semi": [
-          "warn",
-          "never"
-      ],
       "no-unused-vars": [
           "warn"
       ],

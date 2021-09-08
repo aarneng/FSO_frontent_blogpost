@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { connect } from "react-redux"
 
 
@@ -10,7 +10,7 @@ import {
 import LoginForm from "./forms/loginform"
 
 import Notification from "./notification/notifications"
-import BlogScreen from "./components/Blogs"
+import BlogScreen from "./components/blogs"
 import { initBlogs } from "./reducers/blogReducer"
 
 import { initUser } from "./reducers/userReducer"
@@ -36,24 +36,27 @@ const LoginScreen = () => {
   )
 }
 
-const ConditionalBlogScreen = ({ user }) => {
-  console.log(user)
-  if (user) {
-    console.log("wow, user is defined!")
-    return <BlogScreen/>
-  }
-  else {
-    console.log("allright, user is falsy")
-    return <Redirect to="/login" />
-  }
-}
-
 const App = (props) => {
-  // console.log("Seems like i get called")
-  // props.initUser()  // useeffect doesn't work unless init user is dispatched before o_O
-
+  
   useEffect(() => {
-    console.log("do i get called?")
+    /**
+     * -----------------------------------------------------------------------
+     * 
+     * to whom it may concern:
+     * this useEffect hook is initiated only after rendering the re-route to
+     * "/login", so on app startup with a user already in localStorage my 
+     * hacky solution is for the app to reroute from  "/" -> "/login" -> "/".
+     * (see the <Redirect /> in forms/loginform)
+     * 
+     * If you find a way to change/fix this behaviour, please make a PR with 
+     * your changes. If you know how to change/fix this but can't be bothered
+     * to implement the changes yourself, please open an issue on github.
+     * 
+     * Yours truly,
+     * the lead dev
+     *
+     * -----------------------------------------------------------------------
+     */
     props.initUser()
     props.initBlogs()
   }, [])
@@ -61,13 +64,13 @@ const App = (props) => {
   return (
     <div>
       <Navbar/>
-      <div className="margin-under-navbar">
+      <div className="margin-under-navbar container">
         <Switch>
           <Route path="/login">
             <LoginScreen />
           </Route>
           <Route path="/">
-            <ConditionalBlogScreen user={props.user}/>
+            {props.user ? <BlogScreen /> : <Redirect to="/login" />}
           </Route>
         </Switch>
       </div>

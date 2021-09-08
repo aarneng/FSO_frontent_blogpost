@@ -70,6 +70,7 @@ export function initUser() {
   return dispatch => {
     // console.log(userObj, "called")
     const userObj = JSON.parse(window.localStorage.getItem("user"))
+    console.log("THE USER FROM LOCALSTORSGE:", userObj);
 
     dispatch({
       type: "SET_USER",

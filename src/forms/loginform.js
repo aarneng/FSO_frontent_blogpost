@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { connect } from "react-redux"
 import { login } from "../reducers/userReducer"
-
+import { Redirect } from "react-router-dom"
 
 const LoginForm = (props) => {
   console.log("you are loking at the login screen :)")
@@ -22,6 +22,10 @@ const LoginForm = (props) => {
     setUsername("")
     setPassword("")
     props.afterLogin()
+  }
+
+  if (props.user) {
+    return <Redirect to="/" />
   }
 
   return (
@@ -59,8 +63,14 @@ const LoginForm = (props) => {
   )
 }
 
+const mapStateToProps = (state) => {
+  return {
+    user: state.user
+  }
+}
+
 const mapDispatchToProps = {
   login
 }
 
-export default connect(null, mapDispatchToProps)(LoginForm)
+export default connect(mapStateToProps, mapDispatchToProps)(LoginForm)
